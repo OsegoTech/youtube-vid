@@ -18,7 +18,7 @@ connectDb()
 
 app.get("/", (req, res) => {
     console.log("This is the message from the server");
-    res.send("Hello from the server")
+    res.send("Hello from the server end")
 })
 
 app.use("/api/v1/posts", postRoutes)
