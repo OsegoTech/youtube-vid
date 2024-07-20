@@ -9,7 +9,7 @@ const mongoURI = process.env.MONGO_URI
 const connectDb = () =>{
     mongoose.connect(mongoURI)
     mongoose.connection.on("connected", () =>{
-        console.log("Successfully connected to the atlas cluster");
+        console.log("Successfully connected to the atlas cluster in the cloud");
     })
     mongoose.connection.on("disconnected", () =>{
         console.log("Disconnected from the database");
