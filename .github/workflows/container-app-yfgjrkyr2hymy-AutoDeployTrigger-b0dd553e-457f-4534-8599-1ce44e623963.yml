@@ -1,0 +1,47 @@
+name: Trigger auto deployment for container-app-yfgjrkyr2hymy
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '//**'
+    - '.github/workflows/container-app-yfgjrkyr2hymy-AutoDeployTrigger-b0dd553e-457f-4534-8599-1ce44e623963.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.CONTAINERAPPYFGJRKYR2HYMY_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.CONTAINERAPPYFGJRKYR2HYMY_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.CONTAINERAPPYFGJRKYR2HYMY_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: 
+          registryUsername: ${{ secrets.CONTAINERAPPYFGJRKYR2HYMY_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.CONTAINERAPPYFGJRKYR2HYMY_REGISTRY_PASSWORD }}
+          containerAppName: container-app-yfgjrkyr2hymy
+          resourceGroup: youtubevid9cc5
+          imageToBuild: default/[parameters('containerAppName')]:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
