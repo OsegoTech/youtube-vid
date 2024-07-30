@@ -9,6 +9,10 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: [true, "Post must have a body"]
     },
+    image: {
+        type: String,
+        required: [true, "Post must have an image"],
+    },
     author: {
         type: String,
         required: [true, "Post must be associated to an author"],

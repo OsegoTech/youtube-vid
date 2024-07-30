@@ -1,13 +1,38 @@
 import Post from "../models/postModel.js"
+import multer from "multer"
+import {v2 as cloudinary} from "cloudinary"
+import { CloudinaryStorage } from "multer-storage-cloudinary"
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "posts",
+        allowed_formats: ["jpeg", "png", "jpg"]
+    }
+})
+
+export const upload = multer({storage: storage})
 
 
 export const createPost = async(req, res) =>{
     try {
+        if(!req.file) return res.status(400).json({
+            status: "Fail",
+            message: "Please upload an image"
+        })
+        const result = req.file.path
         const {title, body, author} = req.body
         const post  = await Post.create({
             title,
             body,
-            author
+            author,
+            image: result
         })
 
         res.status(201).json({
